@@ -1,0 +1,39 @@
+/**
+ * Add extra social link field
+ */
+add_action( 'show_user_profile', 'extra_user_social_link' );
+
+function extra_user_social_link( $user ) { ?>
+    <h3><?php esc_html_e("Social Link", "domain-name"); ?></h3>
+
+    <table class="form-table">
+        <tr>
+            <th><label for="facebook"><?php _e("Facebook"); ?></label></th>
+            <td>
+                <input type="text" name="sp_facebook" id="facebook" value="<?php echo esc_attr( get_the_author_meta( 'sp_facebook', $user->ID ) ); ?>" class="regular-text" placeholder="facebook" /><br />
+                <span class="description"><?php _e("Facebook Link"); ?></span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="twitter"><?php _e("Twitter"); ?></label></th>
+            <td>
+                <input type="text" name="sp_twitter" id="twitter" value="<?php echo esc_attr( get_the_author_meta( 'sp_twitter', $user->ID ) ); ?>" class="regular-text" /><br />
+                <span class="description"><?php _e("Twitter Link"); ?></span>
+            </td>
+        </tr>
+    </table>
+<?php }
+
+/**
+ * Update extra social link field
+ */
+add_action( 'personal_options_update', 'save_user_social_link' );
+add_action( 'edit_user_profile_update', 'save_user_social_link' );
+
+function save_user_social_link( $user_id ) {
+    if ( !current_user_can( 'edit_user', $user_id ) ) {
+        return false;
+    }
+    update_user_meta( $user_id, 'sp_facebook', $_POST['sp_facebook'] );
+    update_user_meta( $user_id, 'sp_twitter', $_POST['sp_twitter'] );
+}
